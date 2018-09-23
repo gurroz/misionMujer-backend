@@ -2,13 +2,12 @@ package au.com.rmit.misionMujer.backend.model;
 
 import au.com.rmit.misionMujer.backend.enums.MediaType;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.StringJoiner;
+
+import static javax.persistence.CascadeType.ALL;
 
 @Entity
 public class Media {
@@ -24,6 +23,8 @@ public class Media {
     private Integer length;
     private String description;
     private String file;
+
+    @OneToMany(cascade=ALL)
     private List<Category> categories;
 
     public Integer getId() {
