@@ -10,7 +10,7 @@ import java.util.StringJoiner;
 import static javax.persistence.CascadeType.ALL;
 
 @Entity
-public class Media {
+public class Teaching {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -104,7 +104,7 @@ public class Media {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Media projects = (Media) o;
+        Teaching projects = (Teaching) o;
 
         return id != null ? id.equals(projects.id) : projects.id == null;
     }
@@ -116,7 +116,7 @@ public class Media {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", Media.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", Teaching.class.getSimpleName() + "[", "]")
                 .add("id=" + id)
                 .add("title='" + title + "'")
                 .toString();

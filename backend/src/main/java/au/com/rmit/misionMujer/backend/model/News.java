@@ -18,6 +18,7 @@ public class News {
     private Date published;
     private String description;
     private String content;
+    private String image;
 
     public Integer getId() {
         return id;
@@ -57,6 +58,14 @@ public class News {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     @Override

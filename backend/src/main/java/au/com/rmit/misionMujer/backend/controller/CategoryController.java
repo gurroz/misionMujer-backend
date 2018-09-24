@@ -1,13 +1,17 @@
 package au.com.rmit.misionMujer.backend.controller;
 
+import au.com.rmit.misionMujer.backend.dto.CategoryDTO;
+import au.com.rmit.misionMujer.backend.exceptions.ElementAlreadyExistsException;
+import au.com.rmit.misionMujer.backend.exceptions.ElementNotExistsException;
 import au.com.rmit.misionMujer.backend.model.Category;
-import au.com.rmit.misionMujer.backend.model.CategoryRepository;
+import au.com.rmit.misionMujer.backend.services.CategoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path="/categories")
@@ -17,16 +21,28 @@ public class CategoryController {
     static final Logger LOG = LoggerFactory.getLogger(CategoryController.class);
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private CategoryService categoryService = null;
 
     @RequestMapping(path="/")
-    public @ResponseBody Iterable<Category> getAllCategories() {
-        // This returns a JSON or XML with the users
-        return categoryRepository.findAll();
+    public @ResponseBody List<Category> getAllCategories() {
+        return categoryService.getCategories();
     }
 
     @PostMapping("/")
-    public void handleFileUpload(@RequestParam("file") MultipartFile file) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createCategory(@RequestBody CategoryDTO categoryDTO) throws ElementAlreadyExistsException {
+        categoryService.createCategory(categoryDTO);
+    }
 
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public void deleteCategory(@PathVariable("id") int categoryId) {
+        categoryService.deleteCategory(categoryId);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void createCategory(@PathVariable("id") int categoryId, @RequestBody CategoryDTO categoryDTO) throws ElementNotExistsException {
+        categoryService.editCategory(categoryId, categoryDTO);
     }
 }
