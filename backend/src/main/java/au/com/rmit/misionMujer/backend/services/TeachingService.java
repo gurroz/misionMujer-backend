@@ -1,9 +1,11 @@
 package au.com.rmit.misionMujer.backend.services;
 
+import au.com.rmit.misionMujer.backend.dto.CategoryDTO;
 import au.com.rmit.misionMujer.backend.dto.TeachingDTO;
 import au.com.rmit.misionMujer.backend.enums.MediaType;
 import au.com.rmit.misionMujer.backend.exceptions.ElementAlreadyExistsException;
 import au.com.rmit.misionMujer.backend.exceptions.ElementNotExistsException;
+import au.com.rmit.misionMujer.backend.model.Category;
 import au.com.rmit.misionMujer.backend.model.Teaching;
 import au.com.rmit.misionMujer.backend.model.TeachingRepository;
 import org.slf4j.Logger;
@@ -24,6 +26,9 @@ public class TeachingService {
 
     @Autowired
     private TeachingRepository teachingRepository;
+
+    @Autowired
+    private CategoryService categoryService = null;
 
     static final Logger LOG = LoggerFactory.getLogger(TeachingService.class);
     private static TeachingService instance;
@@ -57,15 +62,17 @@ public class TeachingService {
         teachingRepository.deleteById(newsId);
     }
 
-    public void editTeaching(Integer categoryId, TeachingDTO newsDTO) throws ElementNotExistsException {
-        LOG.debug("Updating news", newsDTO);
-        Teaching news = teachingRepository.findById(categoryId).orElseThrow(() -> new ElementNotExistsException());
-        Teaching newTeaching = getFrom(newsDTO,news);
+    public void editTeaching(Integer teachingId, TeachingDTO teachingDTO) throws ElementNotExistsException {
+        LOG.debug("Updating teaching", teachingDTO);
+        Teaching teaching = teachingRepository.findById(teachingId).orElseThrow(() -> new ElementNotExistsException());
+        Teaching newTeaching = getFrom(teachingDTO, teaching);
 
         teachingRepository.save(newTeaching);
     }
 
     private Teaching getFrom(TeachingDTO teachingDTO, Teaching original) {
+        LOG.debug("Creating teaching", teachingDTO);
+
         Teaching teaching = original;
         if(original == null) {
             teaching = new Teaching();
@@ -77,7 +84,15 @@ public class TeachingService {
         teaching.setType(MediaType.valueOf(teachingDTO.getType()));
         teaching.setPublished(new Date());
 
-        // TODO: Save categories
+        List<Category> categories = new ArrayList<Category>();
+        for(CategoryDTO categoryDTO : teachingDTO.getCategories()) {
+            Category category = categoryService.getCategoryByName(categoryDTO.getName());
+            if(category != null) {
+                categories.add(category);
+            }
+        }
+
+        teaching.setCategories(categories);
         return teaching;
     }
 

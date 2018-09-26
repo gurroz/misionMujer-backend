@@ -31,20 +31,20 @@ public class TeachingController {
 
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createTeaching(@RequestBody TeachingDTO categoryDTO) throws ElementAlreadyExistsException {
-        teachingService.createTeaching(categoryDTO);
+    public void createTeaching(@RequestBody TeachingDTO teachingDTO) throws ElementAlreadyExistsException {
+        teachingService.createTeaching(teachingDTO);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void deleteTeaching(@PathVariable("id") int categoryId) {
-        teachingService.deleteTeaching(categoryId);
+    public void deleteTeaching(@PathVariable("id") int teachingId) {
+        teachingService.deleteTeaching(teachingId);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void createTeaching(@PathVariable("id") int categoryId, @RequestBody TeachingDTO teachingDTO) throws ElementNotExistsException {
-        teachingService.editTeaching(categoryId, teachingDTO);
+    public void createTeaching(@PathVariable("id") int teachingId, @RequestBody TeachingDTO teachingDTO) throws ElementNotExistsException {
+        teachingService.editTeaching(teachingId, teachingDTO);
     }
 
 

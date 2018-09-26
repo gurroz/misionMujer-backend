@@ -24,7 +24,7 @@ public class Teaching {
     private String description;
     private String file;
 
-    @OneToMany(cascade=ALL)
+    @ManyToMany(cascade=ALL)
     private List<Category> categories;
 
     public Integer getId() {

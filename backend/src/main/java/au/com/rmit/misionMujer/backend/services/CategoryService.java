@@ -47,13 +47,9 @@ public class CategoryService {
 
     public void createCategory(CategoryDTO categoryDTO) throws ElementAlreadyExistsException {
         LOG.debug("Creating new category", categoryDTO);
-        List<Category> actualCategories = this.getCategories();
-        for(Category category : actualCategories) {
-            if(category.getName().toLowerCase().equals(categoryDTO.getName().toLowerCase())) {
-                throw new ElementAlreadyExistsException();
-            }
+        if(this.getCategoryByName(categoryDTO.getName()) != null) {
+            throw new ElementAlreadyExistsException();
         }
-
 
         Category newCategory = getFrom(categoryDTO);
         LOG.debug("Category does not exist", newCategory);
@@ -66,12 +62,28 @@ public class CategoryService {
 
     public void editCategory(Integer categoryId, CategoryDTO categoryDTO) throws ElementNotExistsException {
         LOG.debug("Updating new category", categoryDTO);
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ElementNotExistsException());
+        Category category = this.getCategoryById(categoryId);
 
         category.setName(categoryDTO.getName());
         category.setImage(categoryDTO.getImage());
 
         categoryRepository.save(category);
+    }
+
+    public Category getCategoryById(Integer categoryId) throws ElementNotExistsException {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ElementNotExistsException());
+        return category;
+    }
+
+    public Category getCategoryByName(String name) {
+        List<Category> actualCategories = this.getCategories();
+        for(Category category : actualCategories) {
+            if(category.getName().toLowerCase().equals(name.toLowerCase())) {
+                return category;
+            }
+        }
+
+        return null;
     }
 
     private Category getFrom(CategoryDTO categoryDTO) {
