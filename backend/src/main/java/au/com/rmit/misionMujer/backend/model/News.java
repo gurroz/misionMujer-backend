@@ -1,9 +1,6 @@
 package au.com.rmit.misionMujer.backend.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.StringJoiner;
 
@@ -17,6 +14,8 @@ public class News {
     private String title;
     private Date published;
     private String description;
+
+    @Column(columnDefinition = "TEXT")
     private String content;
     private String image;
 

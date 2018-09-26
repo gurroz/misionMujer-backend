@@ -21,6 +21,8 @@ public class Teaching {
     private MediaType type;
     private String cover;
     private Integer length;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
     private String file;
 

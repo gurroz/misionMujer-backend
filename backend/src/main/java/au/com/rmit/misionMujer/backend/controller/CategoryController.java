@@ -15,7 +15,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path="/categories")
-@CrossOrigin(origins = "http://localhost:4200")
 public class CategoryController {
 
     static final Logger LOG = LoggerFactory.getLogger(CategoryController.class);
