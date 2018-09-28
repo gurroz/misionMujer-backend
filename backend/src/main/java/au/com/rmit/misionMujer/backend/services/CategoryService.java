@@ -8,34 +8,26 @@ import au.com.rmit.misionMujer.backend.model.CategoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Component
-@Scope(value = "singleton")
 public class CategoryService {
+
+    static final Logger LOG = LoggerFactory.getLogger(CategoryService.class);
 
     @Autowired
     private CategoryRepository categoryRepository;
 
 //    https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-install.html
-    static final Logger LOG = LoggerFactory.getLogger(CategoryService.class);
-    private static CategoryService instance;
-    private CategoryService() { }
+    public CategoryService() { }
 
-    public static CategoryService getInstance() {
-        if(instance == null) {
-            instance = new CategoryService();
-        }
-
-        return instance;
-    }
-
+    @Cacheable("categories")
     public List<Category> getCategories() {
         List<Category> list = new ArrayList<>();
         Iterable<Category> catIterator = categoryRepository.findAll();
@@ -45,6 +37,7 @@ public class CategoryService {
         return list;
     }
 
+    @CachePut("categories")
     public void createCategory(CategoryDTO categoryDTO) throws ElementAlreadyExistsException {
         LOG.debug("Creating new category", categoryDTO);
         if(this.getCategoryByName(categoryDTO.getName()) != null) {
@@ -56,10 +49,12 @@ public class CategoryService {
         categoryRepository.save(newCategory);
     }
 
+    @CacheEvict("categories")
     public void deleteCategory(Integer categoryId) {
         categoryRepository.deleteById(categoryId);
     }
 
+    @CachePut("categories")
     public void editCategory(Integer categoryId, CategoryDTO categoryDTO) throws ElementNotExistsException {
         LOG.debug("Updating new category", categoryDTO);
         Category category = this.getCategoryById(categoryId);

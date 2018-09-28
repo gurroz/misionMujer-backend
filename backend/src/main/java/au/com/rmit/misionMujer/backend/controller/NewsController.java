@@ -20,7 +20,7 @@ public class NewsController {
     static final Logger LOG = LoggerFactory.getLogger(NewsController.class);
 
     @Autowired
-    private NewsService newsService = null;
+    private NewsService newsService;
 
     @RequestMapping(path="/")
     public @ResponseBody
@@ -42,7 +42,7 @@ public class NewsController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void createNews(@PathVariable("id") int newsId, @RequestBody NewsDTO newsDTO) throws ElementNotExistsException {
+    public void updateNews(@PathVariable("id") int newsId, @RequestBody NewsDTO newsDTO) throws ElementNotExistsException {
         newsService.editNews(newsId, newsDTO);
     }
 

@@ -15,15 +15,16 @@ public class Teaching {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
-
     private String title;
     private Date published;
     private MediaType type;
     private String cover;
     private Integer length;
+    private String description;
 
     @Column(columnDefinition = "TEXT")
-    private String description;
+    private String content;
+
     private String file;
 
     @ManyToMany(cascade=ALL)
@@ -101,6 +102,14 @@ public class Teaching {
         this.categories = categories;
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -121,6 +130,14 @@ public class Teaching {
         return new StringJoiner(", ", Teaching.class.getSimpleName() + "[", "]")
                 .add("id=" + id)
                 .add("title='" + title + "'")
+                .add("published=" + published)
+                .add("type=" + type)
+                .add("cover='" + cover + "'")
+                .add("length=" + length)
+                .add("description='" + description + "'")
+                .add("content='" + content + "'")
+                .add("file='" + file + "'")
+                .add("categories=" + categories)
                 .toString();
     }
 }

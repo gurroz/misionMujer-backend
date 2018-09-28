@@ -6,13 +6,12 @@ import java.util.StringJoiner;
 public class TeachingDTO {
     private String title;
     private String description;
+    private String content;
     private String type;
-    private String image;
     private String file;
     private List<CategoryDTO> categories;
 
-    public TeachingDTO() {
-    }
+    public TeachingDTO() {}
 
     public String getTitle() {
         return title;
@@ -38,12 +37,12 @@ public class TeachingDTO {
         this.type = type;
     }
 
-    public String getImage() {
-        return image;
+    public String getContent() {
+        return content;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getFile() {
@@ -67,8 +66,8 @@ public class TeachingDTO {
         return new StringJoiner(", ", TeachingDTO.class.getSimpleName() + "[", "]")
                 .add("title='" + title + "'")
                 .add("description='" + description + "'")
+                .add("content='" + content + "'")
                 .add("type='" + type + "'")
-                .add("image='" + image + "'")
                 .add("file='" + file + "'")
                 .add("categories=" + categories)
                 .toString();

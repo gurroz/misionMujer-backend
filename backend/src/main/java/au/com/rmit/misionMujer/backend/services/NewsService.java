@@ -8,8 +8,9 @@ import au.com.rmit.misionMujer.backend.model.NewsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,25 +18,16 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-@Component
-@Scope(value = "singleton")
 public class NewsService {
+
+    static final Logger LOG = LoggerFactory.getLogger(NewsService.class);
 
     @Autowired
     private NewsRepository newsRepository;
 
-    static final Logger LOG = LoggerFactory.getLogger(NewsService.class);
-    private static NewsService instance;
-    private NewsService() { }
+    public NewsService() { }
 
-    public static NewsService getInstance() {
-        if(instance == null) {
-            instance = new NewsService();
-        }
-
-        return instance;
-    }
-
+    @Cacheable("news")
     public List<News> getNews() {
         List<News> list = new ArrayList<>();
         Iterable<News> newsIterator = newsRepository.findAll();
@@ -45,6 +37,7 @@ public class NewsService {
         return list;
     }
 
+    @CachePut("news")
     public void createNews(NewsDTO newsDTO) throws ElementAlreadyExistsException {
         LOG.debug("Creating new News", newsDTO);
         News newNews = getFrom(newsDTO,null);
@@ -52,10 +45,12 @@ public class NewsService {
         newsRepository.save(newNews);
     }
 
+    @CacheEvict("news")
     public void deleteNews(Integer newsId) {
         newsRepository.deleteById(newsId);
     }
 
+    @CachePut("news")
     public void editNews(Integer categoryId, NewsDTO newsDTO) throws ElementNotExistsException {
         LOG.debug("Updating news", newsDTO);
         News news = newsRepository.findById(categoryId).orElseThrow(() -> new ElementNotExistsException());

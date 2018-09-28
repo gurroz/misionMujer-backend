@@ -20,7 +20,7 @@ public class CategoryController {
     static final Logger LOG = LoggerFactory.getLogger(CategoryController.class);
 
     @Autowired
-    private CategoryService categoryService = null;
+    private CategoryService categoryService;
 
     @RequestMapping(path="/")
     public @ResponseBody List<Category> getAllCategories() {
@@ -41,7 +41,7 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void createCategory(@PathVariable("id") int categoryId, @RequestBody CategoryDTO categoryDTO) throws ElementNotExistsException {
+    public void updateCategory(@PathVariable("id") int categoryId, @RequestBody CategoryDTO categoryDTO) throws ElementNotExistsException {
         categoryService.editCategory(categoryId, categoryDTO);
     }
 }
