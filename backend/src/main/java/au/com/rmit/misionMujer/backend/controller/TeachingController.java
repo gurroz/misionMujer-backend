@@ -8,9 +8,6 @@ import au.com.rmit.misionMujer.backend.services.TeachingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,20 +23,17 @@ public class TeachingController {
     private TeachingService teachingService;
 
     @RequestMapping(path="/")
-    @Cacheable("teachings")
     public @ResponseBody List<Teaching> getAllTeaching() {
         return teachingService.getTeaching();
     }
 
     @PostMapping("/")
-    @CachePut("teachings")
     @ResponseStatus(HttpStatus.CREATED)
     public void createTeaching(@RequestBody TeachingDTO teachingDTO) throws ElementAlreadyExistsException {
         teachingService.createTeaching(teachingDTO);
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @CacheEvict(value="teachings",  allEntries=true)
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deleteTeaching(@PathVariable("id") int teachingId) {
         teachingService.deleteTeaching(teachingId);

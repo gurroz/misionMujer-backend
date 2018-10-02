@@ -37,7 +37,7 @@ public class CategoryService {
         return list;
     }
 
-    @CachePut("categories")
+    @CacheEvict(value="categories",  allEntries=true)
     public void createCategory(CategoryDTO categoryDTO) throws ElementAlreadyExistsException {
         LOG.debug("Creating new category", categoryDTO);
         if(this.getCategoryByName(categoryDTO.getName()) != null) {
@@ -49,12 +49,12 @@ public class CategoryService {
         categoryRepository.save(newCategory);
     }
 
-    @CacheEvict("categories")
+    @CacheEvict(value="categories",  allEntries=true)
     public void deleteCategory(Integer categoryId) {
         categoryRepository.deleteById(categoryId);
     }
 
-    @CachePut("categories")
+    @CacheEvict(value="categories",  allEntries=true)
     public void editCategory(Integer categoryId, CategoryDTO categoryDTO) throws ElementNotExistsException {
         LOG.debug("Updating new category", categoryDTO);
         Category category = this.getCategoryById(categoryId);

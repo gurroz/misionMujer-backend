@@ -9,6 +9,7 @@ public class TeachingDTO {
     private String content;
     private String type;
     private String file;
+    private String image;
     private List<CategoryDTO> categories;
 
     public TeachingDTO() {}
@@ -51,6 +52,14 @@ public class TeachingDTO {
 
     public void setFile(String file) {
         this.file = file;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public List<CategoryDTO> getCategories() {

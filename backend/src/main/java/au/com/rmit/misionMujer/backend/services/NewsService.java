@@ -37,7 +37,7 @@ public class NewsService {
         return list;
     }
 
-    @CachePut("news")
+    @CacheEvict(value="news",  allEntries=true)
     public void createNews(NewsDTO newsDTO) throws ElementAlreadyExistsException {
         LOG.debug("Creating new News", newsDTO);
         News newNews = getFrom(newsDTO,null);
@@ -45,12 +45,12 @@ public class NewsService {
         newsRepository.save(newNews);
     }
 
-    @CacheEvict("news")
+    @CacheEvict(value="news",  allEntries=true)
     public void deleteNews(Integer newsId) {
         newsRepository.deleteById(newsId);
     }
 
-    @CachePut("news")
+    @CacheEvict(value="news",  allEntries=true)
     public void editNews(Integer categoryId, NewsDTO newsDTO) throws ElementNotExistsException {
         LOG.debug("Updating news", newsDTO);
         News news = newsRepository.findById(categoryId).orElseThrow(() -> new ElementNotExistsException());

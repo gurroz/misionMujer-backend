@@ -11,6 +11,9 @@ import au.com.rmit.misionMujer.backend.model.TeachingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,6 +33,7 @@ public class TeachingService {
 
     public TeachingService() { }
 
+    @Cacheable("teachings")
     public List<Teaching> getTeaching() {
         List<Teaching> list = new ArrayList<>();
         Iterable<Teaching> newsIterator = teachingRepository.findAll();
@@ -39,6 +43,8 @@ public class TeachingService {
         return list;
     }
 
+
+    @CacheEvict(value="teachings",  allEntries=true)
     public Teaching createTeaching(TeachingDTO newsDTO) throws ElementAlreadyExistsException {
         LOG.debug("Creating new Teaching", newsDTO);
         Teaching newTeaching = getFrom(newsDTO,null);
@@ -46,10 +52,12 @@ public class TeachingService {
         return teachingRepository.save(newTeaching);
     }
 
+    @CacheEvict(value="teachings",  allEntries=true)
     public void deleteTeaching(Integer newsId) {
         teachingRepository.deleteById(newsId);
     }
 
+    @CacheEvict(value="teachings",  allEntries=true)
     public Teaching editTeaching(Integer teachingId, TeachingDTO teachingDTO) throws ElementNotExistsException {
         LOG.debug("Updating teaching", teachingDTO);
         Teaching teaching = teachingRepository.findById(teachingId).orElseThrow(() -> new ElementNotExistsException());
@@ -65,11 +73,18 @@ public class TeachingService {
         if(original == null) {
             teaching = new Teaching();
         }
-        teaching.setCover("");
-        teaching.setLength(0);
+
+        if(teachingDTO.getImage() != null) {
+            teaching.setCover(teachingDTO.getImage());
+        }
+
+        if(teachingDTO.getFile() != null) {
+            teaching.setFile(teachingDTO.getFile());
+        }
+
+        teaching.setLength((int) (Math.random() * 10000));
         teaching.setDescription(teachingDTO.getDescription());
         teaching.setTitle(teachingDTO.getTitle());
-        teaching.setFile(teachingDTO.getFile());
         teaching.setType(MediaType.valueOf(teachingDTO.getType()));
         teaching.setContent(teachingDTO.getContent());
         teaching.setPublished(new Date());
