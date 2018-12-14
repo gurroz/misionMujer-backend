@@ -1,4 +1,4 @@
-package au.com.rmit.misionMujer.backend.controller;
+package au.com.rmit.misionMujer.backend.controller.v1;
 
 import au.com.rmit.misionMujer.backend.dto.NewsDTO;
 import au.com.rmit.misionMujer.backend.exceptions.ElementAlreadyExistsException;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="/news")
+@RequestMapping(path="/api/v1/news")
 public class NewsController {
 
     static final Logger LOG = LoggerFactory.getLogger(NewsController.class);
