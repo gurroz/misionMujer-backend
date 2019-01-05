@@ -1,8 +1,10 @@
 package au.com.rmit.misionMujer.backend.controller.v1;
 
 import au.com.rmit.misionMujer.backend.dto.NewsDTO;
+import au.com.rmit.misionMujer.backend.dto.ResponseDTO;
 import au.com.rmit.misionMujer.backend.exceptions.ElementAlreadyExistsException;
 import au.com.rmit.misionMujer.backend.exceptions.ElementNotExistsException;
+import au.com.rmit.misionMujer.backend.exceptions.InternalServerException;
 import au.com.rmit.misionMujer.backend.model.News;
 import au.com.rmit.misionMujer.backend.services.NewsService;
 import org.slf4j.Logger;
@@ -23,9 +25,17 @@ public class NewsController {
     private NewsService newsService;
 
     @RequestMapping(path="/")
-    public @ResponseBody
-    List<News> getAllNews() {
-        return newsService.getNews();
+    public @ResponseBody ResponseDTO getAllNews() throws InternalServerException  {
+        try {
+            ResponseDTO<List<News>> response = new ResponseDTO();
+            response.setData(newsService.getNews());
+            response.setResult("OK");
+
+            return response;
+        } catch (Exception e) {
+            LOG.error("Error getAllNews", e);
+            throw new InternalServerException();
+        }
     }
 
     @PostMapping("/")
@@ -36,8 +46,13 @@ public class NewsController {
 
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void deleteNews(@PathVariable("id") int newsId) {
-        newsService.deleteNews(newsId);
+    public void deleteNews(@PathVariable("id") int newsId) throws InternalServerException {
+        try {
+            newsService.deleteNews(newsId);
+        } catch (Exception e) {
+            LOG.error("Error getAllNews", e);
+            throw new InternalServerException();
+        }
     }
 
     @PutMapping("/{id}")

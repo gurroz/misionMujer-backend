@@ -1,8 +1,10 @@
 package au.com.rmit.misionMujer.backend.controller.v1;
 
 import au.com.rmit.misionMujer.backend.dto.CategoryDTO;
+import au.com.rmit.misionMujer.backend.dto.ResponseDTO;
 import au.com.rmit.misionMujer.backend.exceptions.ElementAlreadyExistsException;
 import au.com.rmit.misionMujer.backend.exceptions.ElementNotExistsException;
+import au.com.rmit.misionMujer.backend.exceptions.InternalServerException;
 import au.com.rmit.misionMujer.backend.model.Category;
 import au.com.rmit.misionMujer.backend.services.CategoryService;
 import org.slf4j.Logger;
@@ -23,8 +25,17 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @RequestMapping(path="/")
-    public @ResponseBody List<Category> getAllCategories() {
-        return categoryService.getCategories();
+    public @ResponseBody ResponseDTO getAllCategories() throws InternalServerException {
+        try {
+            ResponseDTO<List<Category>> response = new ResponseDTO();
+            response.setData(categoryService.getCategories());
+            response.setResult("OK");
+
+            return response;
+        } catch (Exception e) {
+            LOG.error("Error getCategories", e);
+            throw new InternalServerException();
+        }
     }
 
     @PostMapping("/")
@@ -35,8 +46,13 @@ public class CategoryController {
 
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void deleteCategory(@PathVariable("id") int categoryId) {
-        categoryService.deleteCategory(categoryId);
+    public void deleteCategory(@PathVariable("id") int categoryId) throws InternalServerException {
+        try {
+            categoryService.deleteCategory(categoryId);
+        } catch (Exception e) {
+            LOG.error("Error deleteCategory", e);
+            throw new InternalServerException();
+        }
     }
 
     @PutMapping("/{id}")

@@ -1,8 +1,11 @@
 package au.com.rmit.misionMujer.backend.controller.v1;
 
+import au.com.rmit.misionMujer.backend.dto.ResponseDTO;
 import au.com.rmit.misionMujer.backend.dto.TeachingDTO;
 import au.com.rmit.misionMujer.backend.exceptions.ElementAlreadyExistsException;
 import au.com.rmit.misionMujer.backend.exceptions.ElementNotExistsException;
+import au.com.rmit.misionMujer.backend.exceptions.InternalServerException;
+import au.com.rmit.misionMujer.backend.model.News;
 import au.com.rmit.misionMujer.backend.model.Teaching;
 import au.com.rmit.misionMujer.backend.services.TeachingService;
 import org.slf4j.Logger;
@@ -23,8 +26,17 @@ public class TeachingController {
     private TeachingService teachingService;
 
     @RequestMapping(path="/")
-    public @ResponseBody List<Teaching> getAllTeaching() {
-        return teachingService.getTeaching();
+    public @ResponseBody ResponseDTO getAllTeaching() throws InternalServerException {
+        try {
+            ResponseDTO<List<Teaching>> response = new ResponseDTO();
+            response.setData(teachingService.getTeaching());
+            response.setResult("OK");
+
+            return response;
+        } catch (Exception e) {
+            LOG.error("Error getAllTeaching", e);
+            throw new InternalServerException();
+        }
     }
 
     @PostMapping("/")
@@ -35,8 +47,13 @@ public class TeachingController {
 
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void deleteTeaching(@PathVariable("id") int teachingId) {
-        teachingService.deleteTeaching(teachingId);
+    public void deleteTeaching(@PathVariable("id") int teachingId) throws InternalServerException{
+        try {
+            teachingService.deleteTeaching(teachingId);
+        } catch (Exception e) {
+            LOG.error("Error deleteTeaching", e);
+            throw new InternalServerException();
+        }
     }
 
     @PutMapping("/{id}")

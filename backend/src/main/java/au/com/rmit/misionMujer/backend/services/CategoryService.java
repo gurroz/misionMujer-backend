@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +23,6 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-//    https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-install.html
     public CategoryService() { }
 
     @Cacheable("categories")
@@ -34,6 +32,7 @@ public class CategoryService {
         if(catIterator != null) {
             catIterator.iterator().forEachRemaining(list::add);
         }
+
         return list;
     }
 
